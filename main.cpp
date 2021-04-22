@@ -74,7 +74,7 @@ int EqualStatusOfHands(int status, int** hand1, int** hand2);
 //Dealer
 void swap_card(int deck[SUITS][FACES], int** hand, int card_index);
 bool dealerDrawsCardsRandomly(int deck[SUITS][FACES], int** dealer_hand);
-bool dealerDrawsCardsCleverly(int deck[SUITS][FACES], int** dealer_hand);
+bool dealerDrawsCardsWisely(int deck[SUITS][FACES], int** dealer_hand);
 
 //delete pointers
 void delete_hand(int **hand);
@@ -262,7 +262,7 @@ int main()
 								int* new_dealer_card = new int[2];
 								Search_deck(deck, current_card + 1, new_dealer_card[0], new_dealer_card[1]);
 								cout << "	Dealer drawed this card: ";
-								cout << "(" << suits[new_dealer_card[0]] << ", " << faces[new_dealer_card[1]] << ")" << " " << endl;
+								cout << "  (" << suits[new_dealer_card[0]] << ", " << faces[new_dealer_card[1]] << ")" << " " << endl;
 								delete[]new_dealer_card;
 
 								if (dealerDrawsCardsRandomly(deck, player.hands[1])) {
@@ -414,10 +414,10 @@ int main()
 								int* new_dealer_card = new int[2];
 								Search_deck(deck, current_card + 1, new_dealer_card[0], new_dealer_card[1]);
 								cout << "	Dealer drawed this card: ";
-								cout << "(" << suits[new_dealer_card[0]] << ", " << faces[new_dealer_card[1]] << ")" << " " << endl;
+								cout << "  (" << suits[new_dealer_card[0]] << ", " << faces[new_dealer_card[1]] << ")" << " " << endl;
 								delete[]new_dealer_card;
 
-								if (dealerDrawsCardsCleverly(deck, player.hands[1])) {
+								if (dealerDrawsCardsWisely(deck, player.hands[1])) {
 									cout << "__________________________________________________" << endl;
 
 									cout << "	>> Dealer swapped a card. <<" << endl;
@@ -505,10 +505,10 @@ int main()
 								int* new_dealer_card = new int[2];
 								Search_deck(deck, current_card + 1, new_dealer_card[0], new_dealer_card[1]);
 								cout << "	Dealer drawed this card: ";
-								cout << "(" << suits[new_dealer_card[0]] << ", " << faces[new_dealer_card[1]] << ")" << " " << endl;
+								cout << "  (" << suits[new_dealer_card[0]] << ", " << faces[new_dealer_card[1]] << ")" << " " << endl;
 								delete[]new_dealer_card;
 
-								if (dealerDrawsCardsCleverly(deck, player.hands[1])) {
+								if (dealerDrawsCardsWisely(deck, player.hands[1])) {
 									cout << "__________________________________________________" << endl;
 
 									cout << "	>> Dealer swapped a card. <<" << endl;
@@ -761,7 +761,10 @@ void Menu_dealer_2()
 	cout << "	|    0: Easy.     |" << endl;
 	cout << "	|    1: Medium.   |" << endl;
 	cout << "	|    2: Hard.     |" << endl;
-	cout << "	|_________________|" << endl;
+	cout << "	|_________________|" << endl << endl;
+	cout << "	Easy(*): You and The Dealer are able to draw cards in 3 turns, The Dealer will do it randomly." << endl << endl;
+	cout << "	Medium(**): You and The Dealer are able to draw cards in 3 turns, but The Dealer will do it wisely." << endl << endl;
+	cout << "	Hard(***): The Dealer is able to draw cards in 3 turns, but you are not." << endl << endl;
 	cout << "	Select: ";
 }
 
@@ -1466,7 +1469,7 @@ bool dealerDrawsCardsRandomly(int deck[SUITS][FACES], int** dealer_hand)
 		return false;
 }
 
-bool dealerDrawsCardsCleverly(int deck[SUITS][FACES], int** dealer_hand)
+bool dealerDrawsCardsWisely(int deck[SUITS][FACES], int** dealer_hand)
 {
 	int* new_card = new int[2];
 	int** new_hand = new int* [CARDS_HAND];
