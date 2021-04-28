@@ -8,8 +8,17 @@ using namespace std;
 #define CARDS 52
 #define CARDS_HAND 5
 
-string suits[SUITS] = { "Hearts", "Diamonds", "Clubs", "Spades" };
+const char WALL = 186;
+const char SURFACE = 205;
+const char CORNER1 = 201;
+const char CORNER2 = 187;
+const char CORNER3 = 200;
+const char CORNER4 = 188;
+
+
+//string suits[SUITS] = { "Hearts", "Diamonds", "Clubs", "Spades" };
 //string faces[CARDS] = { "Ace", "Two", "Three", "Four", "Five","Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen","King" };
+string suits[SUITS] = { "\3", "\4", "\5", "\6" };
 string faces[CARDS] = { "A", "2", "3", "4", "5","6", "7", "8", "9", "10", "J", "Q","K" };
 
 int current_card;
@@ -44,7 +53,7 @@ void printCardsShuffling(int deck[SUITS][FACES], string suits[], string faces[])
 void printHand(int** hand, string suits[SUITS], string faces[FACES]);
 int** createHandTest(int deck[SUITS][FACES], int a[]);
 
-void Search_deck(int deck[SUITS][FACES], int key, int& row_index, int& col_index);
+void Search_deck(int deck[SUITS][FACES], int key, int& suit, int& face);
 int isAceComparing(int ace1, int ace2);
 void SortInDescendingFaces(int** arr);
 void displayStatusOfHand(int** hand);
@@ -64,7 +73,7 @@ int isPair(int** hand);
 int getHighestCard(int** hand);
 
 //n Players
-int*** dealingFornHands(int deck[SUITS][FACES], int n);
+int*** dealingForHands(int deck[SUITS][FACES], int n);
 int getStatusOfHand(int** hand);
 int* rankingHands(int*** hands, int n);
 void evaluateHands(int* scores, int* ranks, int n);
@@ -99,7 +108,7 @@ int main()
 		{
 			case 0:
 			{
-				cout << endl << "	Good Bye!" << endl;
+				cout << endl << "	\1 Good Bye! \1" << endl;
 				system("pause");
 				break;
 			}
@@ -124,7 +133,7 @@ int main()
 			
 				switch (atoi(user_input))
 				{
-					case 0:
+					case 0: //Play Alone
 					{
 						system("cls");
 						shuffleCards(deck);
@@ -168,7 +177,7 @@ int main()
 						//printCardsShuffling(deck, suits, faces);
 						n_Player player;
 
-						player.hands = dealingFornHands(deck, 2);
+						player.hands = dealingForHands(deck, 2);
 
 						switch (atoi(user_input))
 						{
@@ -609,7 +618,7 @@ int main()
 					current_card = 0;
 					shuffleCards(deck);
 
-					players.hands = dealingFornHands(deck, n);
+					players.hands = dealingForHands(deck, n);
 					//players.hands[1] = createHandTest(deck, test_case);
 					//players.hands[0] = createHandTest(deck, test_case_0);
 					//players.hands[4] = createHandTest(deck, test_case_0);
@@ -681,19 +690,19 @@ int main()
 		
 				cout << "\n\n\n";
 				cout << "	 " << endl;
-				cout << "	 ______________" << endl;
-				cout << "	| ***WINNER*** |" << endl;
-				cout << "	|              |" << endl;
+				cout << "	" << CORNER1 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER2 << endl;
+				cout << "	" << WALL << " ***WINNER*** " << WALL << endl;
+				cout << "	" << WALL << "              " << WALL << endl;
 
 				for (int i = 0; i < k; i++) {
 					if(winner[i] == 9)
-						cout << "	|   Player: " << winner[i] + 1 << " |" << endl;
+						cout << "	" << WALL << "   Player: " << winner[i] + 1 << " " << WALL << endl;
 					else
-						cout << "	|   Player: " << winner[i] + 1 << "  |" << endl;
+						cout << "	" << WALL << "   Player: " << winner[i] + 1 << "  " << WALL << endl;
 
 				}
-				cout << "	|              |" << endl;
-				cout << "	|______________|" << endl;
+				cout << "	" << WALL << "              " << WALL << endl;
+				cout << "	" << CORNER3 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER4 << endl;
 
 
 				cout << "\n\n\n";
@@ -716,55 +725,62 @@ int main()
 //MENU
 void mainMenu()
 {
-	cout << "	 _____________" << endl;
-	cout << "	|    POKER    |" << endl;
-	cout << "	|1: 1 player. |" << endl;
-	cout << "	|2: n player  |" << endl;
-	cout << "	|             |" << endl;
-	cout << "	|0: Exit.     |" << endl;
-	cout << "	|_____________|" << endl;
+	cout << "	" << CORNER1 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER2 << endl;
+	cout << "	" << WALL << "     POKER    " << WALL << endl;
+	cout << "	" << WALL << "              " << WALL << endl;
+	cout << "	" << WALL << " 1: 1 player. " << WALL << endl;
+	cout << "	" << WALL << " 2: n player  " << WALL << endl;
+	cout << "	" << WALL << "              " << WALL << endl;
+	cout << "	" << WALL << " 0: Exit.     " << WALL << endl;
+	cout << "	" << WALL << "              " << WALL << endl;
+	cout << "	" << CORNER3 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER4 << endl;
 	cout << "	Select: ";
 }
 
 void Menu_n_player()
 {
-	cout << "	 _____________" << endl;
-	cout << "	|    POKER    |" << endl;
-	cout << "	|  Type n of  |" << endl;
-	cout << "	|   players   |" << endl;
-	cout << "	|             |" << endl;
-	cout << "	|             |" << endl;
-	cout << "	|_____________|" << endl;
+	cout << "	" << CORNER1 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER2 << endl;
+	cout << "	" << WALL << "    POKER    " << WALL << endl;
+	cout << "	" << WALL << "             " << WALL << endl;
+	cout << "	" << WALL << "  Type n of  " << WALL << endl;
+	cout << "	" << WALL << "   players   " << WALL << endl;
+	cout << "	" << WALL << "             " << WALL << endl;
+	cout << "	" << WALL << "             " << WALL << endl;
+	cout << "	" << CORNER3 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER4 << endl;
 	cout << "	Select n: ";
 }
 
 void Menu_dealer_1()
 {
-	cout << "	 ______________" << endl;
-	cout << "	|     POKER    |" << endl;
-	cout << "	| Do you want  |" << endl;
-	cout << "	| to play with |" << endl;
-	cout << "	| the dealer?  |" << endl;
-	cout << "	|              |" << endl;
-	cout << "	|    1: Yes    |" << endl;
-	cout << "	|    0: No     |" << endl;
-	cout << "	|______________|" << endl;
+	cout << "	" << CORNER1 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER2 << endl;
+	cout << "	" << WALL << "     POKER    " << WALL << endl;
+	cout << "	" << WALL << "              " << WALL << endl;
+	cout << "	" << WALL << " Do you want  " << WALL << endl;
+	cout << "	" << WALL << " to play with " << WALL << endl;
+	cout << "	" << WALL << " the dealer?  " << WALL << endl;
+	cout << "	" << WALL << "              " << WALL << endl;
+	cout << "	" << WALL << "   1 \20 Yes    " << WALL << endl;
+	cout << "	" << WALL << "   0 \20 No     " << WALL << endl;
+	cout << "	" << WALL << "              " << WALL << endl;
+	cout << "	" << CORNER3 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER4 << endl;
 	cout << "	Select: ";
 }
 
 void Menu_dealer_2()
 {
-	cout << "	 _________________" << endl;
-	cout << "	|      POKER      |" << endl;
-	cout << "	|  Choose Levels: |" << endl;
-	cout << "	|                 |" << endl;
-	cout << "	|    0: Easy.     |" << endl;
-	cout << "	|    1: Medium.   |" << endl;
-	cout << "	|    2: Hard.     |" << endl;
-	cout << "	|_________________|" << endl << endl;
-	cout << "	Easy(*): You and The Dealer are able to draw cards in 3 turns, The Dealer will do it randomly." << endl << endl;
-	cout << "	Medium(**): You and The Dealer are able to draw cards in 3 turns, but The Dealer will do it wisely." << endl << endl;
-	cout << "	Hard(***): The Dealer is able to draw cards in 3 turns, but you are not." << endl << endl;
+	cout << "	" << CORNER1 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER2 << endl;
+	cout << "	" << WALL << "      POKER      " << WALL << endl;
+	cout << "	" << WALL << "                 " << WALL << endl;
+	cout << "	" << WALL << "  Choose Levels: " << WALL << endl;
+	cout << "	" << WALL << "                 " << WALL << endl;
+	cout << "	" << WALL << "   0 \20 Easy.     " << WALL << endl;
+	cout << "	" << WALL << "   1 \20 Medium.   " << WALL << endl;
+	cout << "	" << WALL << "   2 \20 Hard.     " << WALL << endl;
+	cout << "	" << WALL << "                 " << WALL << endl;
+	cout << "	" << CORNER3 << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << SURFACE << CORNER4 << endl;
+	cout << "	Easy(!): You and The Dealer are able to draw cards in 3 turns, The Dealer will do it randomly." << endl << endl;
+	cout << "	Medium(!!): You and The Dealer are able to draw cards in 3 turns, but The Dealer will do it wisely." << endl << endl;
+	cout << "	Hard(!!!): The Dealer is able to draw cards in 3 turns, but you are not." << endl << endl;
 	cout << "	Select: ";
 }
 
@@ -820,14 +836,14 @@ int** createHandTest(int deck[SUITS][FACES], int a[])
 }
 
 
-void Search_deck(int deck[SUITS][FACES], int key, int& row_index, int& col_index)
+void Search_deck(int deck[SUITS][FACES], int key, int& suit, int& face)
 {
 	int i, j;
 	for (i = 0; i < SUITS; i++) {
 		for (j = 0; j < FACES; j++)
 			if (deck[i][j] == key) {
-				row_index = i;
-				col_index = j;
+				suit = i;
+				face = j;
 				break;
 			}
 
@@ -1044,7 +1060,7 @@ int getHighestCard(int** hand)
 
 
 //n Players
-int*** dealingFornHands(int deck[SUITS][FACES], int n)
+int*** dealingForHands(int deck[SUITS][FACES], int n)
 {
 	int*** player = new int **[n];
 	for (int i = 0; i < n; i++) {
